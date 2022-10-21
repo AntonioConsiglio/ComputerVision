@@ -1,0 +1,7 @@
+/.vscode
+/YoloR
+/runs
+
+data.yaml
+*.png
+*.ipynb
