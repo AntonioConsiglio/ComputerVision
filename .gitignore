@@ -15,8 +15,8 @@ data.yaml
 /DeepLearning_Implementation/__pycache__
 
 /edge_pattern_detection/__pycache__
-/image_processing_classicComputerVision/__pycache__
-/image_processing_classicComputerVision/.vscode
+/ComputerVision_App/__pycache__
+/ComputerVision_App/.vscode
 
 /OCR_application/__pycache__
 /OCR_application/.vscode
