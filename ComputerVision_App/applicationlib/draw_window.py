@@ -6,7 +6,7 @@ import math
 from utils import loadUi
 from PySide2.QtWidgets import QWidget,QDialog,QLabel
 from PySide2.QtGui import QImage,QPixmap,QPainter,QBrush,QColor
-from PySide2.QtCore import Signal,QRect,QPoint,Qt
+from PySide2.QtCore import Signal,QRect,QPoint,Qt,QEvent
 
 
 
@@ -59,8 +59,6 @@ def getRotatedPoint( p, center, angle):
 	return QPoint( x, y )
 
 
-
-
 def paintEvent(self,event):
 
 	image_to = self.image.copy()
@@ -92,18 +90,11 @@ def paintEvent(self,event):
 		qp.drawRect(QRect(self.begin, self.end))
 		qp.drawEllipse(self.center,1.0,1.0)
 		qp.drawEllipse(self.middle_point,4.0,4.0)
+		qp.end()
 	qp = QPainter(self)
 	qp.drawPixmap(0,0,image_to)
-	#self.update()
-	# else:
-	# 	if verify_is_correct_point(self.rotate_point,self.middle_point,self.point):
-	# 		qp.rotate(60)
-	# 		print('im rotating the rectangle')
-	# 		qp.drawRect(QRect(self.begin, self.end))
-	# 		# qp.drawEllipse(self.center,1.0,1.0)
-	# 		# qp.drawEllipse(self.middle_point,4.0,4.0)
-	# 		self.update()
-				
+
+
 
 def mousePressEvent(self, event):
 
@@ -198,6 +189,7 @@ class DrawWindow(QDialog):
 		super(DrawWindow,self).__init__()
 		loadUi("draw_rectangle.ui",self)
 		self._add_method_to_label_class(image)
+		self.draw_label.installEventFilter(self)
 		self.ok_button.clicked.connect(self.emit_train_image)
 		self.cancel_button.clicked.connect(self.close)
 		self.image = image
@@ -208,6 +200,19 @@ class DrawWindow(QDialog):
 	def emit_train_image(self):
 		self.updt_train.emit(self.draw_label.new_image)
 		self.close()
+	
+	def eventFilter(self, o, e):
+		if e.type() == QEvent.Paint: #remember to accept the enter event
+			self.draw_label.paintEvent(e)
+		if e.type() == QEvent.MouseButtonPress:
+			self.draw_label.mousePressEvent(e)
+		if e.type() == QEvent.MouseMove:
+			self.draw_label.mouseMoveEvent(e)
+		if e.type() == QEvent.MouseButtonRelease:
+			self.draw_label.mouseReleaseEvent(e)
+			# ...
+			return True
+		return False #remember to return false for other event types
 	
 	def _add_method_to_label_class(self,image):
 		self.draw_label.image=image
@@ -226,7 +231,7 @@ class DrawWindow(QDialog):
 		self.draw_label.angle = 0
 		self.draw_label.is_rotating = False
 		self.draw_label.is_traslating = False
-		self.draw_label.setPixmap(image)
+		#self.draw_label.setPixmap(image)
 		self.draw_label.paintEvent = MethodType(paintEvent,self.draw_label)
 		self.draw_label.mousePressEvent = MethodType(mousePressEvent,self.draw_label)
 		self.draw_label.mouseMoveEvent = MethodType(mouseMoveEvent,self.draw_label)

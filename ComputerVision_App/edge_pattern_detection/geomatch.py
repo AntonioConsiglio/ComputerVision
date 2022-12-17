@@ -262,8 +262,8 @@ class GeoMatch():
 				count+=1
 		
 		toplot = nmsEdges.astype(np.uint8)
-		cv2.imshow('prova',toplot)
-		cv2.waitKey(0)
+		# cv2.imshow('prova',toplot)
+		# cv2.waitKey(0)
 		RSum=0
 		CSum=0
 		flag = 1
@@ -340,7 +340,7 @@ class GeoMatch():
 		self.modelDefined=True
 
 	def DrawContours(self,source,COG,color, lineWidth):
-		source = cv2.imread(source)
+		
 		if COG is not None:
 			point = Point()
 			for cog in COG:

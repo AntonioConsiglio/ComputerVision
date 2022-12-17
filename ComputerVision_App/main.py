@@ -1,7 +1,7 @@
 import sys
 #3rd party
 from PySide2.QtWidgets import QApplication
-from mainwindow import MainWindow
+from applicationlib.mainwindow import MainWindow
 
 def main():
 
