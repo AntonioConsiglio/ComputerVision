@@ -23,6 +23,9 @@
       <height>480</height>
      </rect>
     </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>

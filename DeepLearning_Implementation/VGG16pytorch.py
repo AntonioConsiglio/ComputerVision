@@ -1,4 +1,3 @@
-from turtle import forward
 import torch
 from torch import nn 
 import torch.functional as TF
@@ -47,7 +46,7 @@ class VGG(nn.Module):
         x = self.drop2(x)
         x = self.output_layer(x)
 
-        return torch.softmax(x)
+        return nn.functional.softmax(x,dim=0)
 
 class MultipleConvBlock(nn.Module):
 
@@ -55,7 +54,8 @@ class MultipleConvBlock(nn.Module):
         super(MultipleConvBlock,self).__init__()
         self.modulelist = nn.ModuleList()
         for _ in range(conv_number):
-            self.modulelist.append(ConvBlock(input_size,output_size,kernel_size))
+            self.modulelist.append(ConvBlock(input_size,output_size,kernel_size,padd=1))
+            input_size = output_size
 
     def forward(self,x):
         for layer in self.modulelist:
@@ -65,9 +65,9 @@ class MultipleConvBlock(nn.Module):
 
 class ConvBlock(nn.Module):
 
-    def __init__(self,input_size,output_size,kernel_size,strd = None,padd = None):
+    def __init__(self,input_size,output_size,kernel_size,padd = 0,strd = 1):
         super(ConvBlock,self).__init__()
-        self.conv = nn.Conv2d(input_size,output_size,kernel_size)
+        self.conv = nn.Conv2d(input_size,output_size,kernel_size,strd,padd)
         self.relu = nn.ReLU()
     
     def forward(self,x):
