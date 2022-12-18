@@ -22,4 +22,7 @@ data.yaml
 /OCR_application/.vscode
 
 /YOLO
-
+/label_extractor
+/VideoAnalizer/deep_sort_pytorch
+/VideoAnalizer/yolor
+/VideoAnalizer/yolov7
