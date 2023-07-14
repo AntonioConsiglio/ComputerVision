@@ -1,0 +1,35 @@
+Date: 23/12/2022
+Time: 20:8
+Phone Number: +393515898200
+Message: QUESTO è UN MESSAGIO DI PROVA AUTOMATICO CON PYTHON
+--------------------
+Date: 23/12/2022
+Time: 20:17
+Phone Number: +393515898200
+Message: QUESTO è UN MESSAGIO DI PROVA AUTOMATICO CON PYTHON
+--------------------
+Date: 23/12/2022
+Time: 20:19
+Phone Number: +393515898200
+Message: QUESTO è UN MESSAGIO DI PROVA AUTOMATICO CON PYTHON
+--------------------
+Date: 23/12/2022
+Time: 20:31
+Phone Number: +393515898200
+Message: QUESTO è UN MESSAGIO DI PROVA AUTOMATICO CON PYTHON
+--------------------
+Date: 23/12/2022
+Time: 20:42
+Phone Number: +393515898200
+Message: QUESTO è UN MESSAGIO DI PROVA AUTOMATICO CON PYTHON
+--------------------
+Date: 23/12/2022
+Time: 20:41
+Phone Number: +393515898200
+Message: QUESTO è UN MESSAGIO DI PROVA AUTOMATICO CON PYTHON
+--------------------
+Date: 23/12/2022
+Time: 20:43
+Phone Number: +393515898200
+Message: QUESTO è UN MESSAGIO DI PROVA AUTOMATICO CON PYTHON
+--------------------

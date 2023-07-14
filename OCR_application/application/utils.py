@@ -73,3 +73,9 @@ def loadUi(ui_file,parent):
 	widget = loader.load(ui_file)
 	QMetaObject.connectSlotsByName(widget)
 	return widget
+
+def approximation(numero):
+	if numero - int(numero) >= 0.5:
+		return int(numero)+1
+	else:
+		return int(numero)

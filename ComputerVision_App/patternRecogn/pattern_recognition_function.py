@@ -22,35 +22,37 @@ def cv_template_matching(image,template,metod):
 def nomaximasuppression(predictions):
  
     objects = []
-    for index,prediction in enumerate(predictions):
-        xmin,ymin,xmax,ymax = prediction[1]
-        w = xmax-xmin
-        h = ymax-ymin
-        score = prediction[0]
-        center = [(xmin+xmax)//2,(ymin+ymax)//2]
-        state = -1
-        if len(objects) > 0:
-            #print('\nnuova verifica')
-            for id,finded in enumerate(objects):
-                #print(f'{ abs(center[0]-finded[1][0])}, {abs(center[1]-finded[1][1])}')
-                if abs(center[0]-finded[1][0]) > w or abs(center[1]-finded[1][1]) > h:
-                    pass
-                else:
-                    state = id
-                if state >=0:
-                    if score > objects[state][2]:
-                        objects[state] = [index,center,score]
-                        break
-            if state <0:
+    if len(predictions)>0:
+        for index,prediction in enumerate(predictions):
+            xmin,ymin,xmax,ymax = prediction[1]
+            w = xmax-xmin
+            h = ymax-ymin
+            score = prediction[0]
+            center = [(xmin+xmax)//2,(ymin+ymax)//2]
+            state = -1
+            if len(objects) > 0:
+                #print('\nnuova verifica')
+                for id,finded in enumerate(objects):
+                    #print(f'{ abs(center[0]-finded[1][0])}, {abs(center[1]-finded[1][1])}')
+                    if abs(center[0]-finded[1][0]) > w or abs(center[1]-finded[1][1]) > h:
+                        pass
+                    else:
+                        state = id
+                    if state >=0:
+                        if score > objects[state][2]:
+                            objects[state] = [index,center,score]
+                            break
+                if state <0:
+                    objects.append([index,center,score])
+                    #print('ho inserito nuovo punto')
+                        
+            else:
                 objects.append([index,center,score])
-                print('ho inserito nuovo punto')
-                    
-        else:
-            objects.append([index,center,score])
-    
-    pred_idx = np.array(objects,dtype=list)[:,0].tolist()
-    predictions = np.array(predictions,dtype = list)[pred_idx]
-    return predictions.tolist()
+        
+        pred_idx = np.array(objects,dtype=list)[:,0].tolist()
+        predictions = np.array(predictions,dtype = list)[pred_idx]
+        return predictions.tolist()
+    return None
 
 def convertoToPixmap(image):
 

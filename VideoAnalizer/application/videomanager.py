@@ -3,7 +3,7 @@ from ast import Break
 import numpy as np
 import torch
 import cv2
-
+from vidgear.gears import CamGear
 
 from .functions_utils import write_fps
 from .detectormanager import DetectionManager
@@ -44,7 +44,8 @@ from multiprocessing import Process,Queue
 
 # 	def stop(self):
 # 		self.state = False     
-
+def getframe():
+	pass
 
 class VideoCamera():
 
@@ -66,10 +67,13 @@ class VideoCamera():
 		
 	def run(self,size,fps,filepath,stoqueue,imgqueue):
 		#try:
-		self.camera = cv2.VideoCapture(filepath)
-		self.camera.set(cv2.CAP_PROP_FPS, fps)
-		self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, size)
-		self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, size)
+		if config.MODE == "video":
+			self.camera = cv2.VideoCapture(filepath)
+			self.camera.set(cv2.CAP_PROP_FPS, fps)
+			self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, size)
+			self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, size)
+		else:
+			self.camera = CamGear(source=config.VIDEO_LINK,stream_mode=True,logging=True).start()
 		self.detector_manager = DetectionManager()
 		self.detector_manager.load_yolor_model()
 
@@ -80,6 +84,7 @@ class VideoCamera():
 			frames: dict(str,np.array) = {}
 			if self.running_mode.value == 0: # Read and process Video Frames
 				stato = False
+				#results = self.camera.read()	
 				stato,frames['color_image'] = self.camera.read()	
 				if stato:
 					frames['prediction'] = frames["color_image"].copy()

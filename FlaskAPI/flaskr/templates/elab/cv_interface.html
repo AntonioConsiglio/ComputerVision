@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <title>Image Upload</title>
+{% endblock %}
+{% block content %}
+<body>
+    <style>
+        .vertical {
+          border-left: 3px solid rgb(38, 26, 1);
+          height: 100%;
+          height: 140px;
+         margin-right: 50px;
+          /* left: 50%; */
+          /* margin-left: -3px; */
+        }
+        #processing_options_check {
+            display: flex;
+            align-items: center;
+        }
+        #show_face_check{
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        #blur_face_check{
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        #single_face{
+            max-width: 200px;
+            right: 100%;
+            padding-left: 15px;
+        }
+        .container{
+            display: flex;
+        }
+        #twocolumn{
+            display: flex;
+            width: 100%;
+            align-items: center;
+        }
+        .imagetoshow{
+            max-width :640px;
+            height: auto;
+        }
+        #face_image{
+            max-width :50px;
+            height: auto;
+            max-height: 100px;
+        }
+
+        /* slideshow */
+
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+        }
+
+        #slide {
+            display: flex;
+            width: 640px;
+            height: auto;
+            align-items: center; 
+            justify-content:space-around; 
+        }
+        #slide2 {
+            display: flex;
+            width: 640px;
+            height: auto;
+            min-height: 200px;
+            align-items: center; 
+            justify-content:space-around;
+            flex-wrap: wrap;
+            
+        }
+        .prev,
+        .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            padding: 16px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+        }
+
+        .prev {
+            left: 0;
+        }
+
+        .next {
+            right: 0;
+        }
+
+    </style>
+    <div style="display: flex; align-items: center;">
+        <div id="UploadSection">
+        <h2>Image Upload</h2>
+        <form action="/uploade_image" method="POST" enctype="multipart/form-data">
+            <input type="file" name="images" accept="image/*" multiple>
+            <input type="submit" value="Upload">
+        </form>
+        </div> 
+        <div class="vertical"></div>
+        <div>
+        <h2>Video Upload</h2>
+        <form action="/upload_video" method="POST" enctype="multipart/form-data">
+            <input type="file" name="video" accept="Video/*">
+            <input type="submit" value="Upload">
+        </form>
+        </div>
+    </div>
+    {% if uploaded_image %}
+        <hr>
+        <form action="/process_image" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="images" value="{{ uploaded_image }}">
+            <div id="processing_options_check">
+                <div id="show_face_check">
+                    <input type="checkbox" id = "show_face" name="show_face">
+                    <label for="show_face">Show Face</label>
+                </div>
+                <div id="blur_face_check">
+                    <input type="checkbox" id = "blur" name="blur">
+                    <label for="blur">Blur Face</label>
+                </div>
+            </div>
+            <input type="submit" value="Process">
+        </form>
+        <hr>
+        <div class="container">
+            <div id="main_results">
+                
+                <div class="slideshow-container">
+                <h3>Uploaded Image: <span id="up_img_n"></span></h3>
+                {%for imageup in uploaded_image %}
+                    <!-- Slides -->
+                    <div class="slide" id="slide"> 
+                        <img class="imagetoshow" src="{{ imageup }}" alt="Uploaded Image">
+                    </div>
+                {% endfor %}
+            
+                <!-- Navigation arrows-->
+                <a class="prev" onclick="changeSlide(0)">&#10094;</a>
+                <a class="next" onclick="changeSlide(0)">&#10095;</a>
+                </div>
+
+                {% if processed_image %}
+                        <div class="slideshow-container">
+                            <h3>Processed Image: <span id = "procc_img_n"></span></h3>
+                                {%for imgprocessed in processed_image %}
+                                <!-- Slides -->
+                                    <div class="slide_processed" id="slide"> 
+                                        <img class="imagetoshow" src="{{ imgprocessed }}" alt="Processed Image">
+                                    </div>
+                                {% endfor %}
+                            <!-- Navigation arrows-->
+                            <a class="prev" onclick="changeSlideProcess(0)">&#10094;</a>
+                            <a class="next" onclick="changeSlideProcess(0)">&#10095;</a>      
+                        </div>
+                        {%if list_of_faces%}
+                            <div class="slideshow-container">
+                                <h3>Single Faces: <span id = "face_n"></span></h3>
+                                {%for faces in list_of_faces %}
+                                    <div class= "slide_faces" id="slide2">
+                                        {%for face in faces %}
+                                        <img class="image_count" id="face_image" src="{{ face }}" alt="Processed Face">
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %} 
+                {% endif %}    
+            </div>
+        </div>
+    {% endif %}  <!-- uploaded image condition -->
+
+    {% if uploaded_video %}
+        <hr>
+        <form action="/process_video" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="video" value="{{ uploaded_video }}">
+
+
+            <div id="processing_options_check">
+                <div id="show_face_check">
+                    <input type="checkbox" id = "show_face" name="show_face">
+                    <label for="show_face">Show Face</label>
+                </div>
+                <div id="blur_face_check">
+                    <input type="checkbox" id = "blur" name="blur">
+                    <label for="blur">Blur Face</label>
+                </div>
+            </div>
+            <input type="submit" value="Process">
+        </form>
+        <hr>
+        <div class="container">
+            <div id="main_results">
+            <h3>Uploaded Video:</h3>
+            <video width="640" height="auto" justify-content="space-around" controls>
+            <source src="{{ uploaded_video }}" alt="Uploaded Video">
+            </video>
+
+            {% if processed_video %}
+                <div class="slideshow-container">
+                    <h3>Processed Video Frames:</h3>
+                        {%for framep in processed_video %}
+                        <!-- Slides -->
+                            <div class="slide" id="slide"> 
+                                <img class="imagetoshow"  src="{{ framep }}" alt="Processed Image">
+                            </div>
+                        {% endfor %}
+                    <!-- Navigation arrows-->
+                    <a class="prev" onclick="changeSlideProcess(0)">&#10094;</a>
+                    <a class="next" onclick="changeSlideProcess(0)">&#10095;</a>      
+                </div>
+            {% endif %}
+            </div>
+        <!-- <div id="single_face">
+            {%if list_of_faces%}
+            <h3>Single Faces:</h3>
+            {%for face in list_of_faces %}
+                <img src="{{ face }}" alt="Processed Face">
+            {% endfor %}
+            {% endif %}
+        </div> -->
+        </div>
+    {% endif %}
+
+
+
+
+<script>
+
+var slideIndex = 0;
+var slideIndex_process = 0;
+var slideIndex_faces = 0;
+showSlides();
+showSlidesprocessed()
+
+function showSlides() {
+    var i;
+    var slides = document.getElementsByClassName("slide");
+    document.getElementById("up_img_n").innerHTML = slides.length;
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    slideIndex++;
+    if (slideIndex > slides.length) {
+        slideIndex = 1;
+    }
+    slides[slideIndex - 1].style.display = "flex";
+    //setTimeout(showSlides, 3000); // Change slide every 3 seconds
+}
+
+function showSlidesprocessed() {
+    var i;
+    var slides = document.getElementsByClassName("slide_processed");
+    document.getElementById("procc_img_n").innerHTML = slides.length;
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    slideIndex_process++;
+    if (slideIndex_process > slides.length) {
+        slideIndex_process = 1;
+    }
+    slides[slideIndex_process -1].style.display = "flex";
+    //setTimeout(showSlides, 3000); // Change slide every 3 seconds
+    showSlidesFaces();
+}
+
+function showSlidesFaces() {
+    var i;
+    var slidesface = document.getElementsByClassName("slide_faces");
+    for (i = 0; i < slidesface.length; i++) {
+        slidesface[i].style.display = "none";
+    }
+    slideIndex_faces++;
+    if (slideIndex_faces > slidesface.length) {
+        slideIndex_faces = 1;
+    }
+    slidesface[slideIndex_faces -1].style.display = "flex";
+    var number = calculate_number_visible(slidesface);
+    document.getElementById("face_n").innerHTML = number;
+    //setTimeout(showSlides, 3000); // Change slide every 3 seconds
+}
+
+function changeSlide(n) {
+    slideIndex += n;
+    showSlides();
+    showSlidesprocessed();
+}
+function changeSlideProcess(n) {
+    slideIndex_process += n;
+    showSlides();
+    showSlidesprocessed();
+}
+
+function calculate_number_visible(elements){
+    var count = 0;
+    
+    for(var i = 0; i < elements.length; i++) {
+        var toverify = elements[i];
+        if (window.getComputedStyle(toverify).display == "flex"){
+            var slidesfacenumber = toverify.getElementsByClassName("image_count");
+            count = slidesfacenumber.length;
+        }
+    }
+    return count;
+}
+
+</script>
+
+</body>
+{% endblock %}

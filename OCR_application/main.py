@@ -6,7 +6,7 @@ from application.home import Home
 
 def main():
     app = QApplication(sys.argv)
-    root = Home()
+    root = Home(app)
     root.show()
     
     app.exec_()

@@ -26,3 +26,11 @@ data.yaml
 /VideoAnalizer/deep_sort_pytorch
 /VideoAnalizer/yolor
 /VideoAnalizer/yolov7
+
+*.jpg
+*.png
+*.pyc
+*.pdf
+*.dll
+*/dist/
+*.pt
