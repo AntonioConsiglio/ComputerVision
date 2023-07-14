@@ -79,17 +79,22 @@ def process_video():
 	file = request.form['video']
 	showface = True if "show_face" in request.form else False
 	blur = True if "blur" in request.form else False
+	outputVideo = True if "outputVideo" in request.form else False
 
 	video_frames = convert_base64_to_video(file)
 
 	processed_base64_full,b64listoffaces = process_equal_frames(video_frames,
 						       							  showface,
 														  blur)
+	
+	if outputVideo:
+		processed_base64_full = convert_images_to_b64video(processed_base64_full)
 
 	return render_template('elab/cv_interface.html',
 							uploaded_video=file,
 						   processed_video=processed_base64_full,
-						   list_of_faces = b64listoffaces)
+						   list_of_faces = b64listoffaces,
+						   showvideo=outputVideo)
 
 def process_equal_frames(frames,showface,blur):
 	
@@ -169,6 +174,16 @@ def process_notequal_frames(frames,showface,blur):
 
 	return processed_base64,b64listoffaces
 
+def convert_images_to_b64video(images):
+	imagessplitted = [img.split(',')[1] for img in images]
+	pilimglist = convert_base64_to_image(imagessplitted,"l")
+	arrimages = [np.array(img) for img in pilimglist]
+	tensorimages = np.stack(arrimages,axis=0)
+	rawBytes = io.BytesIO()
+	iio.imwrite(rawBytes,tensorimages,format_hint=".mp4")
+	videoB64 = base64.b64encode(rawBytes.getvalue()).decode('ascii')
+	videoB64 = add_video_prefix(videoB64)
+	return videoB64
 
 def convert_image_to_base64(img,t="p"):
 	if t == "a":
@@ -186,6 +201,10 @@ def convert_image_to_base64(img,t="p"):
 def add_prefix(imageconverted):
 	mime = "image/jpeg"
 	return "data:%s;base64,%s"%(mime, imageconverted)
+
+def add_video_prefix(videoconverted):
+	mime = "video/mp4"
+	return "data:%s;base64,%s"%(mime, videoconverted)
 
 def convert_video_to_base64(video,t="p"):
 	# imgarray = np.frombuffer(video, dtype=np.uint8)
@@ -207,9 +226,11 @@ def convert_base64_to_video(b64video,t="p"):
 
 	return video_frames
 
-def convert_base64_to_image(imgbase64):
-	imgbase64 = imgbase64.split(",")
-	imgbase64list = [i for i in imgbase64 if "base64" not in i]
+def convert_base64_to_image(imgbase64,k="t"):
+	imgbase64list = imgbase64 
+	if not k == "l":
+		imgbase64 = imgbase64.split(",")
+		imgbase64list = [i for i in imgbase64 if "base64" not in i]
 	images = []
 	for img64 in imgbase64list:
 		images.append(Image.open(io.BytesIO(base64.b64decode(img64))))
