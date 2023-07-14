@@ -7,21 +7,111 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='custom_cv_interface.css') }}">
 <body>
-    <div class="container">
-        <div class="upload-section" id="UploadSection">
-            <h2>Image Upload</h2>
-            <form action="/uploade_image" method="POST" enctype="multipart/form-data">
-                <input type="file" name="images" accept="image/*" multiple>
-                <input type="submit" value="Upload">
-            </form>
+    <style>
+        .vertical {
+          border-left: 3px solid rgb(38, 26, 1);
+          height: 100%;
+          height: 140px;
+         margin-right: 50px;
+          /* left: 50%; */
+          /* margin-left: -3px; */
+        }
+        #processing_options_check {
+            display: flex;
+            align-items: center;
+        }
+        #show_face_check{
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        #blur_face_check{
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        #single_face{
+            max-width: 200px;
+            right: 100%;
+            padding-left: 15px;
+        }
+        .container{
+            display: flex;
+        }
+        #twocolumn{
+            display: flex;
+            width: 100%;
+            align-items: center;
+        }
+        .imagetoshow{
+            max-width :640px;
+            height: auto;
+        }
+        #face_image{
+            max-width :50px;
+            height: auto;
+            max-height: 100px;
+        }
+
+        /* slideshow */
+
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+        }
+
+        #slide {
+            display: flex;
+            width: 640px;
+            height: auto;
+            align-items: center; 
+            justify-content:space-around; 
+        }
+        #slide2 {
+            display: flex;
+            width: 640px;
+            height: auto;
+            min-height: 200px;
+            align-items: center; 
+            justify-content:space-around;
+            flex-wrap: wrap;
+            
+        }
+        .prev,
+        .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            padding: 16px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+        }
+
+        .prev {
+            left: 0;
+        }
+
+        .next {
+            right: 0;
+        }
+
+    </style>
+    <div style="display: flex; align-items: center;">
+        <div id="UploadSection">
+        <h2>Image Upload</h2>
+        <form action="/uploade_image" method="POST" enctype="multipart/form-data">
+            <input type="file" name="images" accept="image/*" multiple>
+            <input type="submit" value="Upload">
+        </form>
         </div> 
-        <!-- <div class="vertical"></div> -->
-        <div class="upload-section">
-            <h2>Video Upload</h2>
-            <form action="/upload_video" method="POST" enctype="multipart/form-data">
-                <input type="file" name="video" accept="Video/*">
-                <input type="submit" value="Upload">
-            </form>
+        <div class="vertical"></div>
+        <div>
+        <h2>Video Upload</h2>
+        <form action="/upload_video" method="POST" enctype="multipart/form-data">
+            <input type="file" name="video" accept="Video/*">
+            <input type="submit" value="Upload">
+        </form>
         </div>
     </div>
     {% if uploaded_image %}
@@ -42,7 +132,6 @@
             <input type="submit" value="Process" class="process-button" id="submit-button-IP">
             <div id="loading-spinner" class="hidden"></div>
         </form>
-     <!-- </div> -->
         <hr>
         <div class="container">
             <div id="main_results">
@@ -92,14 +181,12 @@
         <hr>
         <form action="/process_video" method="POST" enctype="multipart/form-data" class="processing-form" id="video-process-form">
             <input type="hidden" name="video" value="{{ uploaded_video }}">
-            <div class="processing-options">
-                <div class="option">
-                    <input type="checkbox" id="show_face" name="show_face" class="option-checkbox">
-                    <label for="show_face" class="option-label">Show Face</label>
-                </div>
-                <div class="option">
-                    <input type="checkbox" id="blur" name="blur" class="option-checkbox">
-                    <label for="blur" class="option-label">Blur Face</label>
+
+
+            <div id="processing_options_check">
+                <div id="show_face_check">
+                    <input type="checkbox" id = "show_face" name="show_face">
+                    <label for="show_face">Show Face</label>
                 </div>
                 <div class="option">
                     <input type="checkbox" id="video_in_output" name="outputVideo" class="option-checkbox">
@@ -112,92 +199,33 @@
         <hr>
         <div class="container">
             <div id="main_results">
-                <h3>Uploaded Video:</h3>
-                <video width="640" height="auto" justify-content="space-around" controls>
-                    <source src="{{ uploaded_video }}" alt="Uploaded Video">
-                </video>
-                {% if processed_video %}
-                    {% if showvideo %}
-                        <h3>Uploaded Video: <button class="process-button" style="margin-left: 30px;" onclick="downloadVideo()">Download</button> </h3>
-                        <video width="640" height="auto" justify-content="space-around" id ="video-processed"controls>
-                            <source src="{{ processed_video }}" alt="Processed Video">
-                        </video>
-                    {% else %}
-                        <div class="slideshow-container">
-                            <h3>Processed Video Frames:<span id ="up_img_n" style="display: none;" ></span></h3>
-                                {%for framep in processed_video %}
-                                <!-- Slides -->
-                                    <div class="slide" id="slide"> 
-                                        <img class="imagetoshow"  src="{{ framep }}" alt="Processed Image">
-                                    </div>
-                                {% endfor %}
-                            <!-- Navigation arrows-->
-                            <a class="prev" onclick="changeSlide(0)">&#10094;</a>
-                            <a class="next" onclick="changeSlide(0)">&#10095;</a>      
-                        </div>
-                    {% endif %}
-                {% endif %}
+            <h3>Uploaded Video:</h3>
+            <video width="640" height="auto" justify-content="space-around" controls>
+            <source src="{{ uploaded_video }}" alt="Uploaded Video">
+            </video>
+
+            {% if processed_video %}
+                <div class="slideshow-container">
+                    <h3>Processed Video Frames:</h3>
+                        {%for framep in processed_video %}
+                        <!-- Slides -->
+                            <div class="slide" id="slide"> 
+                                <img class="imagetoshow"  src="{{ framep }}" alt="Processed Image">
+                            </div>
+                        {% endfor %}
+                    <!-- Navigation arrows-->
+                    <a class="prev" onclick="changeSlideProcess(0)">&#10094;</a>
+                    <a class="next" onclick="changeSlideProcess(0)">&#10095;</a>      
+                </div>
+            {% endif %}
             </div>
         </div>
     {% endif %}
 
-    <script>
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var sessionVariable = "{{ session.user_id }}"
-            if (sessionVariable){
-            try {
-            const VPForm = document.getElementById('video-process-form');
-            const VPsubmitButton = document.getElementById('submit-button');
-            const loadingSpinner = document.getElementById('loading-spinner');
-            VPForm.addEventListener('submit', function(event) {
-                requestfunction(event,"/process_video",VPForm,VPsubmitButton,loadingSpinner);
-            
-            });
-        }
-            catch (error){};
-            try {
-            const IPForm = document.getElementById('images-process-form');
-            const IPsubmitButton = document.getElementById('submit-button-IP');
-            const loadingSpinner = document.getElementById('loading-spinner');
-            IPForm.addEventListener('submit', function(event) {
-                requestfunction(event,"/process_image",IPForm,IPsubmitButton,loadingSpinner);
-            });
-        }
-            catch (error){};
-        } 
-        });
 
-        function requestfunction(event,url,form,button,spinner){
-            event.preventDefault(); // Prevent the default form submission behavior
-                
-            button.disabled = true;
-            if(spinner){
-                spinner.classList.remove('hidden');
-            }
-            // Create a FormData object to collect the form data
-            var formData = new FormData(form);
 
-            // Send the form data to the server using AJAX
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', url, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    // The server-side processing is complete
-                    button.disabled = false;
-                    if(spinner){
-                        spinner.classList.add('hidden');
-                    }
-                    console.log("request ended");
-                    document.open();
-                    document.write(xhr.responseText);
-                    document.close();
-                    console.log("html loaded");
-                    
-                }
-            }
-            xhr.send(formData);
-        }
+<script>
 
         var slideIndex = 0;
         var slideIndex_process = 0;
@@ -205,51 +233,52 @@
         showSlides();
         showSlidesprocessed()
 
-        function showSlides() {
-            var i;
-            var slides = document.getElementsByClassName("slide");
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            slideIndex++;
-            if (slideIndex > slides.length) {
-                slideIndex = 1;
-            }
-            slides[slideIndex - 1].style.display = "flex";
-            document.getElementById("up_img_n").textContent = slides.length;
-            //setTimeout(showSlides, 3000); // Change slide every 3 seconds
-        }
+function showSlides() {
+    var i;
+    var slides = document.getElementsByClassName("slide");
+    document.getElementById("up_img_n").innerHTML = slides.length;
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    slideIndex++;
+    if (slideIndex > slides.length) {
+        slideIndex = 1;
+    }
+    slides[slideIndex - 1].style.display = "flex";
+    //setTimeout(showSlides, 3000); // Change slide every 3 seconds
+}
 
-        function showSlidesprocessed() {
-            var i;
-            var slides = document.getElementsByClassName("slide_processed");
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            slideIndex_process++;
-            if (slideIndex_process > slides.length) {
-                slideIndex_process = 1;
-            }
-            slides[slideIndex_process -1].style.display = "flex";
-            document.getElementById("procc_img_n").textContent = slides.length;
-            showSlidesFaces();
-        }
+function showSlidesprocessed() {
+    var i;
+    var slides = document.getElementsByClassName("slide_processed");
+    document.getElementById("procc_img_n").innerHTML = slides.length;
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    slideIndex_process++;
+    if (slideIndex_process > slides.length) {
+        slideIndex_process = 1;
+    }
+    slides[slideIndex_process -1].style.display = "flex";
+    //setTimeout(showSlides, 3000); // Change slide every 3 seconds
+    showSlidesFaces();
+}
 
-        function showSlidesFaces() {
-            var i;
-            var slidesface = document.getElementsByClassName("slide_faces");
-            for (i = 0; i < slidesface.length; i++) {
-                slidesface[i].style.display = "none";
-            }
-            slideIndex_faces++;
-            if (slideIndex_faces > slidesface.length) {
-                slideIndex_faces = 1;
-            }
-            slidesface[slideIndex_faces -1].style.display = "flex";
-            var number = calculate_number_visible(slidesface);
-            document.getElementById("face_n").textContent = number;
-            //setTimeout(showSlides, 3000); // Change slide every 3 seconds
-        }
+function showSlidesFaces() {
+    var i;
+    var slidesface = document.getElementsByClassName("slide_faces");
+    for (i = 0; i < slidesface.length; i++) {
+        slidesface[i].style.display = "none";
+    }
+    slideIndex_faces++;
+    if (slideIndex_faces > slidesface.length) {
+        slideIndex_faces = 1;
+    }
+    slidesface[slideIndex_faces -1].style.display = "flex";
+    var number = calculate_number_visible(slidesface);
+    document.getElementById("face_n").innerHTML = number;
+    //setTimeout(showSlides, 3000); // Change slide every 3 seconds
+}
 
         function changeSlide(n) {
             slideIndex += n;
@@ -263,18 +292,18 @@
             showSlidesprocessed();
         }
 
-        function calculate_number_visible(elements){
-            var count = 0;
-            console.log('Form submitted');
-            for(var i = 0; i < elements.length; i++) {
-                var toverify = elements[i];
-                if (window.getComputedStyle(toverify).display == "flex"){
-                    var slidesfacenumber = toverify.getElementsByClassName("image_count");
-                    count = slidesfacenumber.length;
-                }
-            }
-            return count;
+function calculate_number_visible(elements){
+    var count = 0;
+    
+    for(var i = 0; i < elements.length; i++) {
+        var toverify = elements[i];
+        if (window.getComputedStyle(toverify).display == "flex"){
+            var slidesfacenumber = toverify.getElementsByClassName("image_count");
+            count = slidesfacenumber.length;
         }
+    }
+    return count;
+}
 
         function downloadVideo() {
             // Get the video element
