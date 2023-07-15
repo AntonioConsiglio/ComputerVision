@@ -3,274 +3,25 @@
 {% block header %}
     <title>Image Upload</title>
 {% endblock %}
+
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='custom_cv_interface.css') }}">
 <body>
-    <style>
-        body {
-                font-family: Arial, sans-serif;
-                background-color: #f5f5f5;
-            }
-            .container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                
-            }
-
-            .upload-section {
-                background-color: #fff;
-                padding: 10px;
-                padding-bottom: 0px;
-                border-radius: 5px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                margin: 20px;
-            }
-
-            .upload-section h2 {
-                margin-top: 0;
-                margin-bottom: 20px;
-                font-size: 24px;
-                color: #333;
-            }
-
-            .upload-section form {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .upload-section input[type="file"] {
-                margin-bottom: 10px;
-            }
-
-            .upload-section input[type="submit"] {
-                background-color: #4caf50;
-                color: #fff;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-
-            .upload-section input[type="submit"]:hover {
-                background-color: #45a049;
-            }
-
-        .vertical {
-          border-left: 3px solid rgb(38, 26, 1);
-          height: 100%;
-          height: 140px;
-         margin-right: 50px;
-          /* left: 50%; */
-          /* margin-left: -3px; */
-        }
-        #processing_options_check {
-            display: flex;
-            align-items: center;
-        }
-        #show_face{
-            padding-left: 10px;
-            padding-right: 10px;
-        }
-        #blur_face_check{
-            padding-left: 10px;
-            padding-right: 10px;
-        }
-        #single_face{
-            max-width: 200px;
-            right: 100%;
-            padding-left: 15px;
-        }
-        #twocolumn{
-            display: flex;
-            width: 100%;
-            align-items: center;
-        }
-        .imagetoshow{
-            max-width :640px;
-            height: auto;
-        }
-        #face_image{
-            max-width :50px;
-            height: auto;
-            max-height: 100px;
-        }
-
-        /* slideshow */
-
-        .slideshow-container {
-            position: relative;
-            max-width: 100%;
-            margin: auto;
-        }
-
-        #slide {
-            display: flex;
-            width: 640px;
-            height: auto;
-            align-items: center; 
-            justify-content:space-around; 
-        }
-        #slide2 {
-            display: flex;
-            width: 640px;
-            height: auto;
-            min-height: 200px;
-            align-items: center; 
-            justify-content:space-around;
-            flex-wrap: wrap;
-            
-        }
-        .slide img {
-                max-width: 100%;
-                height: auto;
-                border-radius: 5px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-            .prev,
-            .next {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                font-size: 24px;
-                padding: 10px;
-                color: #fff;
-                background-color: rgba(0, 0, 0, 0.5);
-                border: none;
-                cursor: pointer;
-            }
-
-            .prev {
-                left: 0px;
-            }
-
-            .next {
-                right: 0px;
-            }
-            .processing-form {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                /* align-items: center; */
-                /* margin-top: 20px; */
-                background-color: #fff;
-                padding: 10px;
-                padding-bottom: 0px;
-                border-radius: 5px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                margin: 20px;
-            }
-            .processing-form input[type="submit"] {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                align-self: center;
-            }
-
-.processing-options {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 10px;
-    justify-content: center;
-}
-
-.option {
-    display: flex;
-    /* align-items: center;
-    gap: 15px; */
-    margin-bottom: 5px;
-}
-
-.option-checkbox {
-    content: '';
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border: 2px solid #aaa;
-    border-radius: 2px;
-    background-color: #fff;
-    vertical-align: middle;
-}
-
-.option-label {
-    font-size: 16px;
-    color: #333;
-    cursor: pointer;
-    margin-left: 5px;
-}
-
-/* .option-label::before {
-    content: '';
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border: 2px solid #aaa;
-    border-radius: 2px;
-    background-color: #fff;
-    vertical-align: middle;
-    cursor: pointer;
-} */
-.option-checkbox:hover {
-    background-color: #abe0b1;
-
-}
-.option-checkbox:checked  {
-    background-color: #4caf50;
-    border-color: #4caf50;
-}
-
-
-.process-button {
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.process-button:hover {
-    background-color: #45a049;
-}
-
-.hidden {
-    display: none;
-}
-
-#loading-spinner {
-    width: 20px;
-    height: 20px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    animation: spin 2s linear infinite;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    align-self: center;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-    </style>
     <div class="container">
         <div class="upload-section" id="UploadSection">
-        <h2>Image Upload</h2>
-        <form action="/uploade_image" method="POST" enctype="multipart/form-data">
-            <input type="file" name="images" accept="image/*" multiple>
-            <input type="submit" value="Upload">
-        </form>
+            <h2>Image Upload</h2>
+            <form action="/uploade_image" method="POST" enctype="multipart/form-data">
+                <input type="file" name="images" accept="image/*" multiple>
+                <input type="submit" value="Upload">
+            </form>
         </div> 
         <!-- <div class="vertical"></div> -->
         <div class="upload-section">
-        <h2>Video Upload</h2>
-        <form action="/upload_video" method="POST" enctype="multipart/form-data">
-            <input type="file" name="video" accept="Video/*">
-            <input type="submit" value="Upload">
-        </form>
+            <h2>Video Upload</h2>
+            <form action="/upload_video" method="POST" enctype="multipart/form-data">
+                <input type="file" name="video" accept="Video/*">
+                <input type="submit" value="Upload">
+            </form>
         </div>
     </div>
     {% if uploaded_image %}
@@ -291,11 +42,10 @@
             <input type="submit" value="Process" class="process-button" id="submit-button-IP">
             <div id="loading-spinner" class="hidden"></div>
         </form>
-    <!-- </div> -->
+     <!-- </div> -->
         <hr>
         <div class="container">
             <div id="main_results">
-                
                 <div class="slideshow-container">
                 <h3>Uploaded Image: <span id="up_img_n"></span></h3>
                 {%for imageup in uploaded_image %}
@@ -304,37 +54,35 @@
                         <img class="imagetoshow" src="{{ imageup }}" alt="Uploaded Image">
                     </div>
                 {% endfor %}
-            
                 <!-- Navigation arrows-->
                 <a class="prev" onclick="changeSlide(0)">&#10094;</a>
                 <a class="next" onclick="changeSlide(0)">&#10095;</a>
                 </div>
-
                 {% if processed_image %}
+                    <div class="slideshow-container">
+                        <h3>Processed Image: <span id = "procc_img_n"></span></h3>
+                            {%for imgprocessed in processed_image %}
+                            <!-- Slides -->
+                                <div class="slide_processed" id="slide"> 
+                                    <img class="imagetoshow" src="{{ imgprocessed }}" alt="Processed Image">
+                                </div>
+                            {% endfor %}
+                        <!-- Navigation arrows-->
+                        <a class="prev" onclick="changeSlideProcess(0)">&#10094;</a>
+                        <a class="next" onclick="changeSlideProcess(0)">&#10095;</a>      
+                    </div>
+                    {%if list_of_faces%}
                         <div class="slideshow-container">
-                            <h3>Processed Image: <span id = "procc_img_n"></span></h3>
-                                {%for imgprocessed in processed_image %}
-                                <!-- Slides -->
-                                    <div class="slide_processed" id="slide"> 
-                                        <img class="imagetoshow" src="{{ imgprocessed }}" alt="Processed Image">
-                                    </div>
-                                {% endfor %}
-                            <!-- Navigation arrows-->
-                            <a class="prev" onclick="changeSlideProcess(0)">&#10094;</a>
-                            <a class="next" onclick="changeSlideProcess(0)">&#10095;</a>      
+                            <h3>Single Faces: <span id = "face_n"></span></h3>
+                            {%for faces in list_of_faces %}
+                                <div class= "slide_faces" id="slide2">
+                                    {%for face in faces %}
+                                    <img class="image_count" id="face_image" src="{{ face }}" alt="Processed Face">
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
                         </div>
-                        {%if list_of_faces%}
-                            <div class="slideshow-container">
-                                <h3>Single Faces: <span id = "face_n"></span></h3>
-                                {%for faces in list_of_faces %}
-                                    <div class= "slide_faces" id="slide2">
-                                        {%for face in faces %}
-                                        <img class="image_count" id="face_image" src="{{ face }}" alt="Processed Face">
-                                        {% endfor %}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% endif %} 
+                    {% endif %} 
                 {% endif %}    
             </div>
         </div>
@@ -344,7 +92,6 @@
         <hr>
         <form action="/process_video" method="POST" enctype="multipart/form-data" class="processing-form" id="video-process-form">
             <input type="hidden" name="video" value="{{ uploaded_video }}">
-
             <div class="processing-options">
                 <div class="option">
                     <input type="checkbox" id="show_face" name="show_face" class="option-checkbox">
@@ -365,184 +112,188 @@
         <hr>
         <div class="container">
             <div id="main_results">
-            <h3>Uploaded Video:</h3>
-            <video width="640" height="auto" justify-content="space-around" controls>
-            <source src="{{ uploaded_video }}" alt="Uploaded Video">
-            </video>
-
-            {% if processed_video %}
-                {% if showvideo %}
                 <h3>Uploaded Video:</h3>
-                    <video width="640" height="auto" justify-content="space-around" controls>
-                    <source src="{{ processed_video }}" alt="Processed Video">
-                    </video>
-                {% else %}
-                <div class="slideshow-container">
-                    <h3>Processed Video Frames:<span id ="up_img_n" style="display: none;" ></span></h3>
-                        {%for framep in processed_video %}
-                        <!-- Slides -->
-                            <div class="slide" id="slide"> 
-                                <img class="imagetoshow"  src="{{ framep }}" alt="Processed Image">
-                            </div>
-                        {% endfor %}
-                    <!-- Navigation arrows-->
-                    <a class="prev" onclick="changeSlide(0)">&#10094;</a>
-                    <a class="next" onclick="changeSlide(0)">&#10095;</a>      
-                </div>
+                <video width="640" height="auto" justify-content="space-around" controls>
+                    <source src="{{ uploaded_video }}" alt="Uploaded Video">
+                </video>
+                {% if processed_video %}
+                    {% if showvideo %}
+                        <h3>Uploaded Video: <button class="process-button" style="margin-left: 30px;" onclick="downloadVideo()">Download</button> </h3>
+                        <video width="640" height="auto" justify-content="space-around" id ="video-processed"controls>
+                            <source src="{{ processed_video }}" alt="Processed Video">
+                        </video>
+                    {% else %}
+                        <div class="slideshow-container">
+                            <h3>Processed Video Frames:<span id ="up_img_n" style="display: none;" ></span></h3>
+                                {%for framep in processed_video %}
+                                <!-- Slides -->
+                                    <div class="slide" id="slide"> 
+                                        <img class="imagetoshow"  src="{{ framep }}" alt="Processed Image">
+                                    </div>
+                                {% endfor %}
+                            <!-- Navigation arrows-->
+                            <a class="prev" onclick="changeSlide(0)">&#10094;</a>
+                            <a class="next" onclick="changeSlide(0)">&#10095;</a>      
+                        </div>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
             </div>
-        <!-- <div id="single_face">
-            {%if list_of_faces%}
-            <h3>Single Faces:</h3>
-            {%for face in list_of_faces %}
-                <img src="{{ face }}" alt="Processed Face">
-            {% endfor %}
-            {% endif %}
-        </div> -->
         </div>
     {% endif %}
 
+    <script>
 
-
-
-<script>
-
-document.addEventListener('DOMContentLoaded', function() {
-    var sessionVariable = "{{ session.user_id }}"
-    if (sessionVariable){
-    try {
-    const VPForm = document.getElementById('video-process-form');
-    const VPsubmitButton = document.getElementById('submit-button');
-    const loadingSpinner = document.getElementById('loading-spinner');
-    VPForm.addEventListener('submit', function(event) {
-        requestfunction(event,"/process_video",VPForm,VPsubmitButton,loadingSpinner);
-    
-    });
-}
-    catch (error){};
-    try {
-    const IPForm = document.getElementById('images-process-form');
-    const IPsubmitButton = document.getElementById('submit-button-IP');
-    const loadingSpinner = document.getElementById('loading-spinner');
-    IPForm.addEventListener('submit', function(event) {
-        requestfunction(event,"/process_image",IPForm,IPsubmitButton,loadingSpinner);
-    });
-}
-    catch (error){};
-} 
-});
-
-function requestfunction(event,url,form,button,spinner){
-    event.preventDefault(); // Prevent the default form submission behavior
-        
-    button.disabled = true;
-    if(spinner){
-        spinner.classList.remove('hidden');
-    }
-    // Create a FormData object to collect the form data
-    var formData = new FormData(form);
-
-    // Send the form data to the server using AJAX
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', url, true);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // The server-side processing is complete
-            button.disabled = false;
-            if(spinner){
-                spinner.classList.add('hidden');
-            }
-            console.log("request ended");
-            document.open();
-            document.write(xhr.responseText);
-            document.close();
-            console.log("html loaded");
+        document.addEventListener('DOMContentLoaded', function() {
+            var sessionVariable = "{{ session.user_id }}"
+            if (sessionVariable){
+            try {
+            const VPForm = document.getElementById('video-process-form');
+            const VPsubmitButton = document.getElementById('submit-button');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            VPForm.addEventListener('submit', function(event) {
+                requestfunction(event,"/process_video",VPForm,VPsubmitButton,loadingSpinner);
             
+            });
         }
-    }
-    xhr.send(formData);
-}
-
-var slideIndex = 0;
-var slideIndex_process = 0;
-var slideIndex_faces = 0;
-showSlides();
-showSlidesprocessed()
-
-function showSlides() {
-    var i;
-    var slides = document.getElementsByClassName("slide");
-    for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-    }
-    slideIndex++;
-    if (slideIndex > slides.length) {
-        slideIndex = 1;
-    }
-    slides[slideIndex - 1].style.display = "flex";
-    document.getElementById("up_img_n").textContent = slides.length;
-    //setTimeout(showSlides, 3000); // Change slide every 3 seconds
-}
-
-function showSlidesprocessed() {
-    var i;
-    var slides = document.getElementsByClassName("slide_processed");
-    for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-    }
-    slideIndex_process++;
-    if (slideIndex_process > slides.length) {
-        slideIndex_process = 1;
-    }
-    slides[slideIndex_process -1].style.display = "flex";
-    document.getElementById("procc_img_n").textContent = slides.length;
-    showSlidesFaces();
-}
-
-function showSlidesFaces() {
-    var i;
-    var slidesface = document.getElementsByClassName("slide_faces");
-    for (i = 0; i < slidesface.length; i++) {
-        slidesface[i].style.display = "none";
-    }
-    slideIndex_faces++;
-    if (slideIndex_faces > slidesface.length) {
-        slideIndex_faces = 1;
-    }
-    slidesface[slideIndex_faces -1].style.display = "flex";
-    var number = calculate_number_visible(slidesface);
-    document.getElementById("face_n").textContent = number;
-    //setTimeout(showSlides, 3000); // Change slide every 3 seconds
-}
-
-function changeSlide(n) {
-    slideIndex += n;
-    showSlides();
-    showSlidesprocessed();
-}
-function changeSlideProcess(n) {
-    slideIndex_process += n;
-    showSlides();
-    showSlidesprocessed();
-}
-
-function calculate_number_visible(elements){
-    var count = 0;
-    console.log('Form submitted');
-    for(var i = 0; i < elements.length; i++) {
-        var toverify = elements[i];
-        if (window.getComputedStyle(toverify).display == "flex"){
-            var slidesfacenumber = toverify.getElementsByClassName("image_count");
-            count = slidesfacenumber.length;
+            catch (error){};
+            try {
+            const IPForm = document.getElementById('images-process-form');
+            const IPsubmitButton = document.getElementById('submit-button-IP');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            IPForm.addEventListener('submit', function(event) {
+                requestfunction(event,"/process_image",IPForm,IPsubmitButton,loadingSpinner);
+            });
         }
-    }
-    return count;
-}
+            catch (error){};
+        } 
+        });
 
+        function requestfunction(event,url,form,button,spinner){
+            event.preventDefault(); // Prevent the default form submission behavior
+                
+            button.disabled = true;
+            if(spinner){
+                spinner.classList.remove('hidden');
+            }
+            // Create a FormData object to collect the form data
+            var formData = new FormData(form);
 
+            // Send the form data to the server using AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // The server-side processing is complete
+                    button.disabled = false;
+                    if(spinner){
+                        spinner.classList.add('hidden');
+                    }
+                    console.log("request ended");
+                    document.open();
+                    document.write(xhr.responseText);
+                    document.close();
+                    console.log("html loaded");
+                    
+                }
+            }
+            xhr.send(formData);
+        }
 
-</script>
+        var slideIndex = 0;
+        var slideIndex_process = 0;
+        var slideIndex_faces = 0;
+        showSlides();
+        showSlidesprocessed()
+
+        function showSlides() {
+            var i;
+            var slides = document.getElementsByClassName("slide");
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) {
+                slideIndex = 1;
+            }
+            slides[slideIndex - 1].style.display = "flex";
+            document.getElementById("up_img_n").textContent = slides.length;
+            //setTimeout(showSlides, 3000); // Change slide every 3 seconds
+        }
+
+        function showSlidesprocessed() {
+            var i;
+            var slides = document.getElementsByClassName("slide_processed");
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex_process++;
+            if (slideIndex_process > slides.length) {
+                slideIndex_process = 1;
+            }
+            slides[slideIndex_process -1].style.display = "flex";
+            document.getElementById("procc_img_n").textContent = slides.length;
+            showSlidesFaces();
+        }
+
+        function showSlidesFaces() {
+            var i;
+            var slidesface = document.getElementsByClassName("slide_faces");
+            for (i = 0; i < slidesface.length; i++) {
+                slidesface[i].style.display = "none";
+            }
+            slideIndex_faces++;
+            if (slideIndex_faces > slidesface.length) {
+                slideIndex_faces = 1;
+            }
+            slidesface[slideIndex_faces -1].style.display = "flex";
+            var number = calculate_number_visible(slidesface);
+            document.getElementById("face_n").textContent = number;
+            //setTimeout(showSlides, 3000); // Change slide every 3 seconds
+        }
+
+        function changeSlide(n) {
+            slideIndex += n;
+            showSlides();
+            showSlidesprocessed();
+        }
+
+        function changeSlideProcess(n) {
+            slideIndex_process += n;
+            showSlides();
+            showSlidesprocessed();
+        }
+
+        function calculate_number_visible(elements){
+            var count = 0;
+            console.log('Form submitted');
+            for(var i = 0; i < elements.length; i++) {
+                var toverify = elements[i];
+                if (window.getComputedStyle(toverify).display == "flex"){
+                    var slidesfacenumber = toverify.getElementsByClassName("image_count");
+                    count = slidesfacenumber.length;
+                }
+            }
+            return count;
+        }
+
+        function downloadVideo() {
+            // Get the video element
+            var video = document.getElementById("video-processed");
+
+            // Get the source URL of the video
+            var source = video.getElementsByTagName("source")[0].src;
+
+            // Create a link element
+            var link = document.createElement('a');
+            link.href = source;
+            link.download = "video_processed.mp4"; // Set the download filename
+
+            // Append the link to the document and click it programmatically
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
 
 </body>
 {% endblock %}

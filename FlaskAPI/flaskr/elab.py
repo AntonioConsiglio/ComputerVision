@@ -27,10 +27,13 @@ def index():
 def uploade_image():
 	files = request.files.getlist('images')
 	images_base64 = []
-	for file in files:
-		images_base64.append(convert_image_to_base64(file))
-	# # Convert the processed image back to bytes
-	#img_base64 = convert_image_to_base64(file)
+	try:
+		for file in files:
+			images_base64.append(convert_image_to_base64(file))
+	except:
+		pass
+		# # Convert the processed image back to bytes
+		#img_base64 = convert_image_to_base64(file)
 
 	return render_template('elab/cv_interface.html', uploaded_image=images_base64)
 
@@ -81,14 +84,15 @@ def process_video():
 	blur = True if "blur" in request.form else False
 	outputVideo = True if "outputVideo" in request.form else False
 
-	video_frames = convert_base64_to_video(file)
+	video_frames,metadatas = convert_base64_to_video(file)
 
 	processed_base64_full,b64listoffaces = process_equal_frames(video_frames,
 						       							  showface,
 														  blur)
 	
 	if outputVideo:
-		processed_base64_full = convert_images_to_b64video(processed_base64_full)
+		processed_base64_full = convert_images_to_b64video(processed_base64_full,
+						     								int(metadatas["fps"]))
 
 	return render_template('elab/cv_interface.html',
 							uploaded_video=file,
@@ -174,13 +178,14 @@ def process_notequal_frames(frames,showface,blur):
 
 	return processed_base64,b64listoffaces
 
-def convert_images_to_b64video(images):
+def convert_images_to_b64video(images,vidfps):
+
 	imagessplitted = [img.split(',')[1] for img in images]
 	pilimglist = convert_base64_to_image(imagessplitted,"l")
 	arrimages = [np.array(img) for img in pilimglist]
 	tensorimages = np.stack(arrimages,axis=0)
 	rawBytes = io.BytesIO()
-	iio.imwrite(rawBytes,tensorimages,format_hint=".mp4")
+	iio.imwrite(rawBytes,tensorimages,format_hint=".mp4",fps=vidfps)
 	videoB64 = base64.b64encode(rawBytes.getvalue()).decode('ascii')
 	videoB64 = add_video_prefix(videoB64)
 	return videoB64
@@ -191,7 +196,10 @@ def convert_image_to_base64(img,t="p"):
 	elif t == "p":
 		img = Image.open(img)
 	rawBytes = io.BytesIO()
-	img.save(rawBytes, "JPEG")
+	try:
+		img.save(rawBytes, "JPEG")
+	except:
+		img.save(rawBytes, "PNG")
 	rawBytes.seek(0)
 	imageconverted = base64.b64encode(rawBytes.getvalue()).decode('ascii')
 	processed_image_base64 = add_prefix(imageconverted)
@@ -222,9 +230,10 @@ def convert_base64_to_video(b64video,t="p"):
 	b64video = b64video.split(",")[1]
 	b64video = base64.b64decode(b64video)
 	rawbytesvideo = io.BytesIO(b64video)
+	metadata = iio.immeta(b64video)
 	video_frames = iio.imread(rawbytesvideo,index=None,format_hint=".mp4")
 
-	return video_frames
+	return video_frames,metadata
 
 def convert_base64_to_image(imgbase64,k="t"):
 	imgbase64list = imgbase64 
