@@ -84,7 +84,13 @@ class ResidualBlock(nn.Module):
         
         residual = x
         for n, layer in enumerate(self.layers,start=1):
+<<<<<<< HEAD
             x = layer(x)
+=======
+            print(f"Input_shape: {x.size()}")
+            x = layer(x)
+            print(f"Output_shape: {x.size()}")
+>>>>>>> 3310702 (resnet implementation)
             if self.config.n_conv == n:
                 residual = self.projection_layer(residual)
                 x = x + residual
@@ -163,7 +169,11 @@ class ResNet(nn.Module):
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     config = ResNetConfig(architecture=18)
+=======
+    config = ResNetConfig()
+>>>>>>> 3310702 (resnet implementation)
     model = ResNet(config)
 
     print(f"{model=}")
