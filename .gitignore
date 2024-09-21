@@ -44,4 +44,5 @@ data.yaml
 *.pth
 *.safetensors
 */__pycache__
+*.blob
 OCR_application/dist
