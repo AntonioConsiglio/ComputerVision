@@ -5,7 +5,6 @@ from tqdm import tqdm
 
 TEMPLATE = "C:\\Users\\anton\\Downloads\\GeoMatch_src\\GeoMatch\\Template.jpg"
 IMG_TO_FIND = "C:\\Users\\anton\\Downloads\\GeoMatch_src\\GeoMatch\\Search2.jpg"
-#IMG_TO_FIND = "C:\\Users\\antonio.consiglio\\OneDrive - E.P.F. Elettrotecnica S.r.l\\Immagini\\Part00.bmp"
 
 def prepare_images_for_detection(template,image):
 
