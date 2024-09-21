@@ -46,4 +46,4 @@ data.yaml
 */__pycache__
 *.blob
 OCR_application/dist
-OCR_application\build\main 
+OCR_application/build/main 
