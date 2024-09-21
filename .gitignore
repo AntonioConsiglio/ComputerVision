@@ -47,3 +47,5 @@ data.yaml
 *.blob
 OCR_application/dist
 OCR_application/build/main 
+
+Segmentation/RT-DETR/*
