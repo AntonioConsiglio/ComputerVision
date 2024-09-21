@@ -34,3 +34,14 @@ data.yaml
 *.dll
 */dist/
 *.pt
+*/yolov7
+*/yolov7_face
+*.pyc
+*.jpg
+*.pdf
+*.zip
+*.pt
+*.pth
+*.safetensors
+*/__pycache__
+OCR_application/dist
