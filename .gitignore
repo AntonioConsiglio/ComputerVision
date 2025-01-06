@@ -27,6 +27,8 @@ data.yaml
 /VideoAnalizer/yolor
 /VideoAnalizer/yolov7
 
+/stereo_approximation
+
 *.jpg
 *.png
 *.pyc
