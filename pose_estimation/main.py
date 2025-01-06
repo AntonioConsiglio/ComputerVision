@@ -8,16 +8,18 @@ from threading import Thread
 import math
 
 from cameraManager import DeviceManager
+import config
 
 CALL_HELP = 4
 ANGLE = 360/CALL_HELP
-BLOB_PATH = "C:\\Users\\anton\\Desktop\\PROGETTI\\computer_vision\\pose_estimation\\pose_landmark_heavy_sh4.blob"
-BLOB_PATH = "C:\\Users\\anton\\Desktop\\PROGETTI\\computer_vision\\pose_estimation\\pose_landmark_lite_sh4.blob"
+BLOB_PATH = "./pose_landmark_heavy_sh4.blob"
+BLOB_PATH = "./pose_landmark_lite_sh4.blob"
 
 #Connect whatsapp account
 
-wpAccount = WhatsApp(token="EAAG8s3XomZBYBAPbzUamsgk8cMOLUUXneG1nljKonXQeFWB81MYwFrDYudKChZAd4rfOr2x6SsCAYKndvb7CI6NibkJjSdyZCEhGgZC2OZAftVrpPU9nWE7Yg4rtiNLDwoKa9aey75jdmdJcnDVefeas9UlaP7iI0ZB6Gg3U8ZAuWEmWcQmrWmZCe26hNgWHNmfIxa0CQ4ZCRjZBvU6Dwiutjk",
-                    phone_number_id=102675322721946)
+wpAccount = WhatsApp(token=config.WP_TOKEN,
+                    phone_number_id=cofig.PHONE_NUMBER_ID)
+
 if __name__ == "__main__":
 
     # camera = DeviceManager(nn_mode=True,
@@ -53,9 +55,7 @@ if __name__ == "__main__":
                 if deltatime > 10:
                     tempo2send = list(map(int,time.strftime("%H-%M-%S").split('-')))
                     tempo2send[1]+= math.ceil(tempo2send[2]/45)
-                    wpAccount.send_message('Hello I am WhatsApp Cloud API', '393409997935')
-                    # Thread(target=pywhatkit.sendwhatmsg,
-                    #         args=("+393515898200","QUESTO è UN MESSAGIO DI PROVA AUTOMATICO CON PYTHON",tempo2send[0],tempo2send[1],15,True,2)).start()
+                    wpAccount.send_message('Hello I am WhatsApp Cloud API', config.EMERGENCY_NUMBER)
                     message_sent_time = time.time()
                 
 
